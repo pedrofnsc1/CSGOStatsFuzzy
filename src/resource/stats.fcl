@@ -1,0 +1,38 @@
+FUNCTION_BLOCK stats
+
+VAR_INPUT
+    kills: REAL;
+    assists: REAL;
+    deaths: REAL;
+    adr: REAL;
+END_VAR
+
+VAR_OUTPUT
+    performance: REAL;
+END_VAR
+
+FUZZIFY kills
+    TERM bad:= (0,0) (5, 1) (10, 0) ;
+
+END_FUZZIFY
+
+FUZZIFY assists
+
+END_FUZZIFY
+
+FUZZIFY death
+
+END_FUZZIFY
+
+FUZZIFY adr
+
+END_FUZZIFY
+
+
+
+
+
+
+
+
+END_FUNCTION_BLOCK

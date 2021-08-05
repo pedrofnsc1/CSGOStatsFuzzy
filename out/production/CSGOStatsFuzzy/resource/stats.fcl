@@ -1,0 +1,17 @@
+FUNCTION_BLOCK stats
+
+VAR_INPUT
+    kills: REAL;
+
+END_VAR
+
+VAR_OUTPUT
+
+
+FUZZIFY kills
+    TERM bad:= (0,0) (5, 1) (10, 0) ;
+
+END_FUZZIFY
+
+
+END_FUNCTION_BLOCK
