@@ -21,7 +21,6 @@ public class StatsFuzzy {
         //fis.setVariable("kast",);
         //fis.setVariable("ADR",);
 
-
         fis.evaluate();
 
         //SHOWS GRAPHIC
@@ -33,7 +32,5 @@ public class StatsFuzzy {
         //SHOW RULES WITH ACTIVATION VALUE
         for( Rule r: fis.getFunctionBlock("stats").getFuzzyRuleBlock("No1").getRules())
             System.out.println(r);
-
     }
-
 }
