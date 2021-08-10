@@ -15,10 +15,10 @@ public class StatsFuzzy {
         JFuzzyChart.get().chart(fis.getFunctionBlock("stats"));
 
         //SET ENTRY
-        fis.setVariable("kill", 20);
-        fis.setVariable("assist", 5);
-        fis.setVariable("death", 12);
-        fis.setVariable("kast",73);
+        fis.setVariable("kill", 18);
+        fis.setVariable("assist", 2);
+        fis.setVariable("death", 22);
+        fis.setVariable("kast",55);
 
         fis.evaluate();
 
