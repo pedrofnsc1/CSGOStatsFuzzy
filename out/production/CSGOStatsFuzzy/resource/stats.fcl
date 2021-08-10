@@ -1,76 +1,78 @@
 FUNCTION_BLOCK stats
 
-VAR_INPUT
-    kill: REAL;
-    assist: REAL;
-    death: REAL;
-    kast: REAL;
-END_VAR
+    VAR_INPUT
+        kill: REAL;
+        assist: REAL;
+        death: REAL;
+        kast: REAL;
+    END_VAR
 
-VAR_OUTPUT
-    performance: REAL;
-END_VAR
+    VAR_OUTPUT
+        performance: REAL;
+    END_VAR
 
-FUZZIFY kill
-    //number of kills in one map played
-    TERM low := (0,1) (10, 1) (15, 0);
-    TERM medium := (12,0) (15, 1) (20, 1) (25, 0);
-    TERM high := (20, 0) (25, 1) (35, 1) (40, 1);
+    FUZZIFY kill
+        //number of kills in one map played
+        TERM low := (0,1) (10, 1) (15, 0);
+        TERM medium := (12,0) (15, 1) (20, 1) (25, 0);
+        TERM high := (20, 0) (25, 1) (35, 1) (40, 1);
+    END_FUZZIFY
 
-END_FUZZIFY
+    FUZZIFY assist
+        //number of assists in one map played
+        TERM low := (0,0) (2, 1) (4, 0);
+        TERM medium := (3,0) (5, 1) (7, 0);
+        TERM high := (6, 0) (7, 1) (10, 1) (15, 1);
+    END_FUZZIFY
 
-FUZZIFY assist
-    //number of assists in one map played
-    TERM low := (0,0) (2, 1) (4, 0);
-    TERM medium := (3,0) (5, 1) (7, 0);
-    TERM high := (6, 0) (7, 1) (10, 1) (15, 1);
-END_FUZZIFY
+    FUZZIFY death
+        //number of assists in one map played
+        // higher is better
+        TERM high := (0, 0) (5, 1) (10, 0);
+        TERM medium := (9, 0) (12, 1) (16, 0);
+        TERM low := (15, 0) (18, 1) (30, 1);
+    END_FUZZIFY
 
-FUZZIFY death
-    //number of assists in one map played
-    // high is better
-    TERM high := (0, 0) (5, 1) (10, 0);
-    TERM medium := (9, 0) (12, 1) (16, 0);
-    TERM low := (15, 0) (18, 1) (30, 1);
-END_FUZZIFY
+    FUZZIFY kast
+        /**
+        *KAST percentage per round in wich the player either had
+        *for KILLS, ASSISTS, SAVE ROUNDS and TRADED KILLS
+        **/
 
-FUZZIFY kast
-    /**
-    *KAST percentage per round in wich the player either had
-    *for KILLS, ASSISTS, SAVE ROUNDS and TRADED KILLS
-    **/
+        TERM low := (0, 0) (20, 1) (40, 1) (60,0);
+        TERM medium := (60, 0) (73, 1) (83, 0);
+        TERM high := (83, 0) (92, 1) (100, 0);
+    END_FUZZIFY
 
-    //high = 80+
-    //medium = 73+ -80
-    //low = -73
+    DEFUZZIFY performance
+        TERM bad := 0;
+        TERM average := 5;
+        TERM good := 10;
+        METHOD: COGS;
+        DEFAULT := 0;
+    END_DEFUZZIFY
 
-    TERM low := (0, 0) (20, 1) (40, 1) (60,0);
-    TERM medium := (60, 0) (73, 1) (83, 0);
-    TERM high := (83, 0) (92, 1) (100, 0);
-END_FUZZIFY
+    RULEBLOCK No1
+        AND : MIN;
+        ACT : MIN;
+        ACCU : MAX;
 
-DEFUZZIFY performance
-    TERM bad := 0;
-    TERM average := 5;
-    TERM good := 10;
-    METHOD: COGS;
-    DEFAULT := 0;
-END_DEFUZZIFY
+        //standard rules
+            RULE 1 : IF kill IS low AND assist IS low AND death IS low AND kast IS low THEN performance IS bad;
+            RULE 2 : IF kill IS medium AND assist IS medium AND death IS medium AND kast IS medium THEN performance IS average;
+            RULE 3 : IF kill IS high AND assist IS high AND death IS high AND kast IS high THEN performance IS good;
 
-RULEBLOCK No1
-    AND : MIN;
-    ACT : MIN;
-    ACCU : MAX;
+        //bad rules
+            RULE 4 : IF kill IS low AND assist IS medium OR assist IS low AND death IS medium OR death IS low AND kast IS medium THEN performance IS bad;
+            RULE 5 : IF kill IS low OR kill IS low AND assist IS low AND death IS low AND kast IS medium THEN performance is bad;
 
-    //standard rules
-    RULE 1 : IF kill IS low AND assist IS low AND death IS low AND kast IS low THEN performance IS bad;
-    RULE 2 : IF kill IS medium AND assist IS medium AND death IS medium AND kast IS medium THEN performance IS average;
-    RULE 3 : IF kill IS high AND assist IS high AND death IS high AND kast IS high THEN performance IS good;
+        //average rules
+            RULE 6 : IF kill IS high AND assist IS medium AND death IS low AND kast is medium THEN performance IS average;
+            RULE 7 : IF kill IS high OR kill IS medium AND assist IS low OR assist IS medium AND death IS low THEN performance IS average;
+            RULE 8 : IF kill IS low AND assist IS medium OR assist IS high AND death IS high OR death IS medium AND kast IS high THEN performance IS average;
 
-    //average rules
-    RULE 4 : IF kill IS high AND assist IS medium AND death IS low AND kast is medium THEN performance IS average;
-    RULE 5 : IF kill IS high OR kill IS medium AND assist IS low OR assist IS medium AND death IS low THEN performance IS average;
-    RULE 6 : IF kill IS low AND assist IS medium OR assist IS high AND death IS high OR death IS medium AND kast IS high THEN performance IS average;
-END_RULEBLOCK
+        //good rules
+            RULE 9 : IF kill IS high AND assist IS high AND death IS low OR death IS medium AND kast IS high THEN performance IS good;
 
+    END_RULEBLOCK
 END_FUNCTION_BLOCK
