@@ -15,21 +15,25 @@ public class StatsFuzzy {
         JFuzzyChart.get().chart(fis.getFunctionBlock("stats"));
 
         //SET ENTRY
-        fis.setVariable("kill",  30);
-        fis.setVariable("assist",8);
-        fis.setVariable("death", 15);
-        fis.setVariable("kast",  85);
+        fis.setVariable("kill",  45);
+        fis.setVariable("assist",5);
+        fis.setVariable("death", 14);
+        fis.setVariable("kast",  92);
 
         fis.evaluate();
 
         //SHOWS GRAPHIC
         Variable performance = fis.getFunctionBlock("stats").getVariable("performance");
+        JFuzzyChart.get().chart(performance, performance.getDefuzzifier(), true);
 
         //VARIABLE OUTPUT
         System.out.println(performance.getValue());
 
+
+
         //SHOW RULES WITH ACTIVATION VALUE
         for( Rule r: fis.getFunctionBlock("stats").getFuzzyRuleBlock("No1").getRules())
             System.out.println(r);
+
     }
 }
