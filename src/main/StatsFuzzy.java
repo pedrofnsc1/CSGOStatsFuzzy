@@ -18,7 +18,7 @@ public class StatsFuzzy {
         fis.setVariable("kill",  42);
         fis.setVariable("assist",5);
         fis.setVariable("death", 14);
-        fis.setVariable("kast",  92);
+
 
         fis.evaluate();
 
